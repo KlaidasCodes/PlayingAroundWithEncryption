@@ -87,11 +87,11 @@ def generate_mouse_movement_entropy(time_for_collection):
      
 
 
-def generating_random_key(key_len):
+def generating_random_key(key_len, time_for_collection):
     import secrets
     # this time let's make something that is actually truly random
     # so this gives us a list of quite random numbers
-    entropy_list = generate_mouse_movement_entropy(2)
+    entropy_list = generate_mouse_movement_entropy(time_for_collection)
     for i in range(key_len):
         random_number: str = entropy_list[secrets.randbelow(len(entropy_list))]
         random_digit: int = int(random_number[secrets.randbelow(len(random_number))])
@@ -103,4 +103,4 @@ def generating_random_key(key_len):
 
 
 
-generating_random_key()
+generating_random_key(128, 2)

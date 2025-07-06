@@ -1,3 +1,7 @@
+# True security can't rely on the source code being secret. It has to rely on the complexity and the impossibility of reverse-engineering the final result due
+# to its mathematical properties.
+
+
 def dec_to_binary(dec_num: int):
     remainder = 0
     if dec_num == 0:
@@ -13,7 +17,7 @@ def dec_to_binary(dec_num: int):
     if current_number == 1:
         binary_number.append(str(current_number))
     return "".join(binary_number[::-1])
-print(dec_to_binary(89))
+# print(dec_to_binary(89))
 
 def generate_random_key(length_of_key):
     """generates a random binary key of the specified length using user-generated entropy"""
@@ -44,7 +48,7 @@ def generate_random_key(length_of_key):
     print("".join(random_key))
     
 
-generate_random_key(128)
+# generate_random_key(128)
 
 
 def bitwise_XOR(binary_number: str, generated_key: str):
@@ -57,4 +61,46 @@ def bitwise_XOR(binary_number: str, generated_key: str):
                 new_result += "1"
     return new_result
 
-print(bitwise_XOR("111001", "001010"))
+# print(bitwise_XOR("111001", "001010"))
+
+
+
+
+
+
+def generate_mouse_movement_entropy(time_for_collection):
+    """Prompts the user to move the mouse and generates random numbers from that"""
+    import pyautogui
+    import time
+    import secrets
+    print(f"In 2 seconds, imagine a picture in your head and move your mouse, pretend to draw and colour in" 
+          f"that picture for {time_for_collection} seconds to generate entropy...")
+    time.sleep(2)
+    entropy_list = []
+    print("Collecting entropy...")
+    for i in range(time_for_collection*10):
+        mouse_x, mouse_y = pyautogui.position()
+        new_number = (mouse_x * secrets.randbelow(500)) * (mouse_y * secrets.randbelow(500))
+        entropy_list.append(str(new_number))
+        time.sleep(0.1)
+    return entropy_list
+     
+
+
+def generating_random_key(key_len):
+    import secrets
+    # this time let's make something that is actually truly random
+    # so this gives us a list of quite random numbers
+    entropy_list = generate_mouse_movement_entropy(2)
+    for i in range(key_len):
+        random_number: str = entropy_list[secrets.randbelow(len(entropy_list))]
+        random_digit: int = int(random_number[secrets.randbelow(len(random_number))])
+        # TODO do something with this. I've generated half a thought but give it time to grow into an actual thought
+        choice_hash = {
+            "even": "1",
+            "odd": "0"
+        }
+
+
+
+generating_random_key()

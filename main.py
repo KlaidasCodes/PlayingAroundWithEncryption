@@ -73,6 +73,7 @@ def generate_mouse_movement_entropy(time_for_collection):
     import pyautogui
     import time
     import secrets
+    import hashlib
     print(f"In 2 seconds, imagine a picture in your head and move your mouse, pretend to draw and colour in" 
           f"that picture for {time_for_collection} seconds to generate entropy...")
     time.sleep(2)
@@ -81,8 +82,16 @@ def generate_mouse_movement_entropy(time_for_collection):
     for i in range(time_for_collection*10):
         mouse_x, mouse_y = pyautogui.position()
         new_number = (mouse_x * secrets.randbelow(500)) * (mouse_y * secrets.randbelow(500))
-        entropy_list.append(str(new_number))
+        hasher = hashlib.sha256()
+        new_number_bytes = str(new_number).encode("utf-8")
+        # hashes the number
+        hasher.update(new_number_bytes)
+        # now we do bits > bytes > dec
+        new_number_bytes = hasher.digest()
+        new_number_dec = int.from_bytes(new_number_bytes, "big")
+        entropy_list.append(str(new_number_dec))
         time.sleep(0.1)
+        print(new_number_dec)
     return entropy_list
      
 
@@ -91,16 +100,19 @@ def generating_random_key(key_len, time_for_collection):
     import secrets
     # this time let's make something that is actually truly random
     # so this gives us a list of quite random numbers
+    final_key = ""
     entropy_list = generate_mouse_movement_entropy(time_for_collection)
     for i in range(key_len):
         random_number: str = entropy_list[secrets.randbelow(len(entropy_list))]
         random_digit: int = int(random_number[secrets.randbelow(len(random_number))])
-        # TODO do something with this. I've generated half a thought but give it time to grow into an actual thought
-        choice_hash = {
-            "even": "1",
-            "odd": "0"
-        }
+        if random_digit % 2 == 0:
+            final_key += "1"
+        else:
+            final_key += "0"
+    return final_key
+
+    
 
 
 
-generating_random_key(128, 2)
+print(f"The new secret key: {generating_random_key(128, 2)}")

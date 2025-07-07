@@ -116,3 +116,5 @@ def generating_random_key(key_len, time_for_collection):
 
 
 print(f"The new secret key: {generating_random_key(128, 2)}")
+
+# just a quick test
